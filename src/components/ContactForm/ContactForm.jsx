@@ -19,7 +19,6 @@ export const ContactForm = props => {
   const handleSubmit = evt => {
     evt.preventDefault();
     props.addContact({ name: name, number: number });
-    console.log(name + ' ' + number);
     reset();
   };
 

@@ -2,7 +2,7 @@ import css from './ContactList.module.css';
 export const ContactList = props => {
   return (
     <ul>
-      {props.contacts.map(elem => {
+      {props.contacts().map(elem => {
         return (
           <li key={elem.id}>
             <span style={{ display: 'line-block', marginRight: 16 }}>
