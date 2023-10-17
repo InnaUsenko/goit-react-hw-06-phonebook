@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { nanoid } from 'nanoid';
-import ContactForm from './ContactForm/ContactForm';
+import { ContactForm } from './ContactForm/ContactForm';
 import { ContactFilter } from './ContactFilter/ContactFilter';
 import { ContactList } from './ContactList/ContactList';
 import localStorage from '../services/storage';
@@ -12,6 +12,7 @@ class App extends Component {
   };
 
   addContact = contact => {
+    console.log(contact);
     const contacts = this.state.contacts;
     const names = contacts.map(elem => elem.name.toLowerCase());
     if (names.includes(contact.name.toLowerCase())) {
