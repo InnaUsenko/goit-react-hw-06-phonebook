@@ -1,21 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { nanoid } from 'nanoid';
 import { ContactForm } from './ContactForm/ContactForm';
 import { ContactFilter } from './ContactFilter/ContactFilter';
 import { ContactList } from './ContactList/ContactList';
 import localStorage from '../services/storage';
 import { useSelector, useDispatch } from 'react-redux';
-import { addContact, deleteContact, addFilter } from '../redux/store';
+import {
+  addContact,
+  deleteContact,
+  setContactList,
+  addFilter,
+} from '../redux/store';
 
 export const App = () => {
   const dispatch = useDispatch();
   const filterRedux = useSelector(state => state.filter);
   const contactsRedux = useSelector(state => state.contacts);
-  const [contacts, setContacts] = useState([]);
-  const [filter, setFilter] = useState('');
 
-  const addContact = contact => {
-    const names = contacts.map(elem => elem.name.toLowerCase());
+  const addCnt = contact => {
+    const names = contactsRedux.map(elem => elem.name.toLowerCase());
     if (names.includes(contact.name.toLowerCase())) {
       window.alert('The name ' + contact.name + ' already exists');
       return;
@@ -27,22 +30,21 @@ export const App = () => {
       number: contact.number,
     };
 
-    const localContacts = [...contacts];
-    localContacts.push(newContact);
-    setContacts(localContacts);
+    dispatch(addContact(newContact));
   };
 
   const findContact = () => {
-    return contacts.filter(el => {
+    console.log(contactsRedux);
+    return contactsRedux.filter(el => {
+      console.log(el);
       const curName = el.name;
       let temp = curName.substr(0, filterRedux.length);
       return filterRedux.toLowerCase() === temp.toLowerCase();
     });
   };
 
-  const deleteContact = id => {
-    const localContacts = contacts.filter(elem => elem.id !== id);
-    setContacts(localContacts);
+  const deleteCnt = id => {
+    dispatch(deleteContact(id));
   };
 
   //componentDidMount();
@@ -50,15 +52,15 @@ export const App = () => {
     const localContacts = localStorage.load('phoneBook');
     console.log('componentDidMount');
     if (localContacts && localContacts.length > 0) {
-      setContacts(localContacts);
+      dispatch(setContactList(localContacts));
     }
-  }, []);
+  }, [dispatch]);
 
   //componentDidUpdate(prevProps, prevState, snapshot);
   useEffect(() => {
     console.log('componentDidUpdate');
-    localStorage.save('phoneBook', contacts);
-  }, [contacts]);
+    localStorage.save('phoneBook', contactsRedux);
+  }, [contactsRedux]);
 
   return (
     <div
@@ -68,14 +70,14 @@ export const App = () => {
       }}
     >
       <h1>Phonebook</h1>
-      <ContactForm addContact={addContact} />
+      <ContactForm addContact={addCnt} />
       <h2>Contacts</h2>
       <ContactFilter
         handleFiltering={name => {
           dispatch(addFilter(name.toLowerCase()));
         }}
       />
-      <ContactList contacts={findContact} handleDelete={deleteContact} />
+      <ContactList contacts={findContact} handleDelete={deleteCnt} />
     </div>
   );
 };
