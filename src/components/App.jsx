@@ -5,7 +5,7 @@ import { ContactFilter } from './ContactFilter/ContactFilter';
 import { ContactList } from './ContactList/ContactList';
 import localStorage from '../services/storage';
 import { useSelector, useDispatch } from 'react-redux';
-import { addContact, setContactList, addFilter } from '../redux/store';
+import { addContact, setContactList } from '../redux/store';
 
 export const App = () => {
   const dispatch = useDispatch();
@@ -52,11 +52,7 @@ export const App = () => {
       <h1>Phonebook</h1>
       <ContactForm addContact={addCnt} />
       <h2>Contacts</h2>
-      <ContactFilter
-        handleFiltering={name => {
-          dispatch(addFilter(name.toLowerCase()));
-        }}
-      />
+      <ContactFilter />
       <ContactList />
     </div>
   );

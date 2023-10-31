@@ -1,5 +1,10 @@
 import css from './ContactFilter.module.css';
-export const ContactFilter = props => {
+import { useDispatch } from 'react-redux';
+import { addFilter } from '../../redux/store';
+
+export const ContactFilter = () => {
+  const dispatch = useDispatch();
+
   return (
     <div className={css.form}>
       <label htmlFor="filter">Find contacts by name</label>
@@ -10,7 +15,7 @@ export const ContactFilter = props => {
         type="text"
         name="filter"
         onChange={event => {
-          props.handleFiltering(event.target.value);
+          dispatch(addFilter(event.target.value.toLowerCase()));
         }}
         required
       />
