@@ -4,8 +4,13 @@ import { ContactForm } from './ContactForm/ContactForm';
 import { ContactFilter } from './ContactFilter/ContactFilter';
 import { ContactList } from './ContactList/ContactList';
 import localStorage from '../services/storage';
+import { useSelector, useDispatch } from 'react-redux';
+import { addContact, deleteContact, addFilter } from '../redux/store';
 
 export const App = () => {
+  const dispatch = useDispatch();
+  const filterRedux = useSelector(state => state.filter);
+  const contactsRedux = useSelector(state => state.contacts);
   const [contacts, setContacts] = useState([]);
   const [filter, setFilter] = useState('');
 
@@ -27,15 +32,11 @@ export const App = () => {
     setContacts(localContacts);
   };
 
-  const addFilter = name => {
-    setFilter(name.toLowerCase());
-  };
-
   const findContact = () => {
     return contacts.filter(el => {
       const curName = el.name;
-      let temp = curName.substr(0, filter.length);
-      return filter.toLowerCase() === temp.toLowerCase();
+      let temp = curName.substr(0, filterRedux.length);
+      return filterRedux.toLowerCase() === temp.toLowerCase();
     });
   };
 
@@ -69,7 +70,11 @@ export const App = () => {
       <h1>Phonebook</h1>
       <ContactForm addContact={addContact} />
       <h2>Contacts</h2>
-      <ContactFilter handleFiltering={addFilter} />
+      <ContactFilter
+        handleFiltering={name => {
+          dispatch(addFilter(name.toLowerCase()));
+        }}
+      />
       <ContactList contacts={findContact} handleDelete={deleteContact} />
     </div>
   );
