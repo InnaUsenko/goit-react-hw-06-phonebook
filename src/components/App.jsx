@@ -1,36 +1,19 @@
 import React, { useEffect } from 'react';
-import { nanoid } from 'nanoid';
+
 import { ContactForm } from './ContactForm/ContactForm';
 import { ContactFilter } from './ContactFilter/ContactFilter';
 import { ContactList } from './ContactList/ContactList';
 import localStorage from '../services/storage';
 import { useSelector, useDispatch } from 'react-redux';
-import { addContact, setContactList } from '../redux/store';
+import { setContactList } from '../redux/store';
 
 export const App = () => {
   const dispatch = useDispatch();
   const contactsRedux = useSelector(state => state.contacts);
 
-  const addCnt = contact => {
-    const names = contactsRedux.map(elem => elem.name.toLowerCase());
-    if (names.includes(contact.name.toLowerCase())) {
-      window.alert('The name ' + contact.name + ' already exists');
-      return;
-    }
-
-    const newContact = {
-      id: nanoid(),
-      name: contact.name,
-      number: contact.number,
-    };
-
-    dispatch(addContact(newContact));
-  };
-
   //componentDidMount();
   useEffect(() => {
     const localContacts = localStorage.load('phoneBook');
-    console.log('componentDidMount');
     if (localContacts && localContacts.length > 0) {
       dispatch(setContactList(localContacts));
     }
@@ -38,7 +21,6 @@ export const App = () => {
 
   //componentDidUpdate(prevProps, prevState, snapshot);
   useEffect(() => {
-    console.log('componentDidUpdate');
     localStorage.save('phoneBook', contactsRedux);
   }, [contactsRedux]);
 
@@ -50,7 +32,7 @@ export const App = () => {
       }}
     >
       <h1>Phonebook</h1>
-      <ContactForm addContact={addCnt} />
+      <ContactForm />
       <h2>Contacts</h2>
       <ContactFilter />
       <ContactList />
