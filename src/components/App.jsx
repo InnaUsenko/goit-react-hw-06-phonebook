@@ -5,16 +5,10 @@ import { ContactFilter } from './ContactFilter/ContactFilter';
 import { ContactList } from './ContactList/ContactList';
 import localStorage from '../services/storage';
 import { useSelector, useDispatch } from 'react-redux';
-import {
-  addContact,
-  deleteContact,
-  setContactList,
-  addFilter,
-} from '../redux/store';
+import { addContact, setContactList, addFilter } from '../redux/store';
 
 export const App = () => {
   const dispatch = useDispatch();
-  const filterRedux = useSelector(state => state.filter);
   const contactsRedux = useSelector(state => state.contacts);
 
   const addCnt = contact => {
@@ -31,20 +25,6 @@ export const App = () => {
     };
 
     dispatch(addContact(newContact));
-  };
-
-  const findContact = () => {
-    console.log(contactsRedux);
-    return contactsRedux.filter(el => {
-      console.log(el);
-      const curName = el.name;
-      let temp = curName.substr(0, filterRedux.length);
-      return filterRedux.toLowerCase() === temp.toLowerCase();
-    });
-  };
-
-  const deleteCnt = id => {
-    dispatch(deleteContact(id));
   };
 
   //componentDidMount();
@@ -77,7 +57,7 @@ export const App = () => {
           dispatch(addFilter(name.toLowerCase()));
         }}
       />
-      <ContactList contacts={findContact} handleDelete={deleteCnt} />
+      <ContactList />
     </div>
   );
 };
